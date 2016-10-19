@@ -6,6 +6,7 @@ package dam.isi.frsf.utn.edu.ar.lab05.modelo;
 public class Tarea {
 
     private Integer id;
+    private String descripcion;
     private Boolean terminada;
     private Integer horasEstimadas;
     private Integer minutosTrabajados;
@@ -14,11 +15,13 @@ public class Tarea {
     private Prioridad prioridad;
     private Usuario responsable;
 
+
     public Tarea() {
     }
 
-    public Tarea(Integer id, Boolean terminada, Integer horasEstimadas, Integer minutosTrabajados, Boolean finalizada, Proyecto proyecto, Prioridad prioridad, Usuario responsable) {
+    public Tarea(Integer id, String descripcion, Boolean terminada, Integer horasEstimadas, Integer minutosTrabajados, Boolean finalizada, Proyecto proyecto, Prioridad prioridad, Usuario responsable) {
         this.id = id;
+        this.descripcion = descripcion;
         this.terminada = terminada;
         this.horasEstimadas = horasEstimadas;
         this.minutosTrabajados = minutosTrabajados;
@@ -91,4 +94,13 @@ public class Tarea {
     public void setResponsable(Usuario responsable) {
         this.responsable = responsable;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
 }

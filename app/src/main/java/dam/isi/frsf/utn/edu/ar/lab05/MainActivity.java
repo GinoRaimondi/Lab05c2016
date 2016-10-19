@@ -20,7 +20,8 @@ import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvTareas;
-    private ProyectoDAO proyectoDAO;
+
+    public static ProyectoDAO proyectoDAO;
     private Cursor cursor;
     private TareaCursorAdapter tca;
     @Override

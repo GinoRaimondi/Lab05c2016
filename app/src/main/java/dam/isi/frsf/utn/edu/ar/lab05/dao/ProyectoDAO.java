@@ -65,6 +65,7 @@ public class ProyectoDAO {
         if(cursorPry.moveToFirst()){
             idPry=cursorPry.getInt(0);
         }
+        cursorPry.close();
         Cursor cursor = null;
         Log.d("LAB05-MAIN","PROYECTO : _"+idPry.toString()+" - "+ _SQL_TAREAS_X_PROYECTO);
         cursor = db.rawQuery(_SQL_TAREAS_X_PROYECTO,new String[]{idPry.toString()});
@@ -76,6 +77,16 @@ public class ProyectoDAO {
     }
 
     public void actualizarTarea(Tarea t){
+
+        //TODO
+
+        ContentValues registro = new ContentValues();
+
+        //registro.put("_ID",t.getId());
+
+        registro.put(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS, t.getMinutosTrabajados());
+
+        db.update(ProyectoDBMetadata.TABLA_TAREAS, registro, "_ID="+t.getId(), null);
 
     }
 
@@ -97,7 +108,6 @@ public class ProyectoDAO {
         valores.put(ProyectoDBMetadata.TablaTareasMetadata.FINALIZADA,1);
         SQLiteDatabase mydb =dbHelper.getWritableDatabase();
         mydb.update(ProyectoDBMetadata.TABLA_TAREAS, valores, "_id=?", new String[]{idTarea.toString()});
-        mydb.close();
     }
 
     public List<Tarea> listarDesviosPlanificacion(Boolean soloTerminadas,Integer desvioMaximoMinutos){
