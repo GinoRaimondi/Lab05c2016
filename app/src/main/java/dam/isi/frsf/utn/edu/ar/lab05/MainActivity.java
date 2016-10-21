@@ -3,6 +3,7 @@ package dam.isi.frsf.utn.edu.ar.lab05;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
@@ -33,12 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ProyectoApiRest rest = new ProyectoApiRest();
-
-        Proyecto p = rest.buscarProyecto(1);
-
-        Log.d("Proyecto", p.getNombre().toString());
-
+        new LongOperation().execute("");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,4 +96,31 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class LongOperation extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            ProyectoApiRest rest = new ProyectoApiRest();
+
+            Proyecto p = rest.buscarProyecto(1);
+
+            Log.d("Proyecto", p.getNombre().toString());
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
+
 }
