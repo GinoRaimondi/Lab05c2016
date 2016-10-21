@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 
+import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ProyectoApiRest rest = new ProyectoApiRest();
+
+        Proyecto p = rest.buscarProyecto(1);
+
+        Log.d("Proyecto", p.getNombre().toString());
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
