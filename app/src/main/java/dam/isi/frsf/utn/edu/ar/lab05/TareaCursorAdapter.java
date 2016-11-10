@@ -69,8 +69,12 @@ public class TareaCursorAdapter extends CursorAdapter {
         final Integer horasAsigandas = cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS));
         tiempoAsignado.setText(horasAsigandas*60 + " minutos");
 
-        Integer minutosAsigandos = cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS));
+        final Integer minutosAsigandos = cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS));
         tiempoTrabajado.setText(minutosAsigandos+ " minutos");
+
+        Log.d("Valor base min asi",""+minutosAsigandos+"");
+
+
         String p = cursor.getString(cursor.getColumnIndex(ProyectoDBMetadata.TablaPrioridadMetadata.PRIORIDAD_ALIAS));
         prioridad.setText(p);
         responsable.setText(cursor.getString(cursor.getColumnIndex(ProyectoDBMetadata.TablaUsuariosMetadata.USUARIO_ALIAS)));
@@ -120,15 +124,19 @@ public class TareaCursorAdapter extends CursorAdapter {
 
                     tarea.setId(idTarea);
 
-                    tarea.setMinutosTrabajados( cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS)) + minutosTrabajados);
 
-                    MainActivity.proyectoDAO.actualizarTarea(tarea);
+
+                    Log.d("Valor recuperado","" + minutosAsigandos + "");
+
+                    tarea.setMinutosTrabajados( minutosAsigandos + minutosTrabajados);
+
+                    myDao.actualizarTarea(tarea);
 
                     // Pasar a segundos
 
                     // Guardar en labase
 
-                    Toast.makeText(contexto, "Ha trabajado durante " + minutosTrabajados + " Milisegundos",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contexto, "Ha trabajado durante " + tarea.getMinutosTrabajados() + " Milisegundos",Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView lvTareas;
 
-    public static ProyectoDAO proyectoDAO;
+    private ProyectoDAO proyectoDAO;
     private Cursor cursor;
     private TareaCursorAdapter tca;
     @Override
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new LongOperation().execute("");
+        //new LongOperation().execute("");                                        LAB06!!!
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
