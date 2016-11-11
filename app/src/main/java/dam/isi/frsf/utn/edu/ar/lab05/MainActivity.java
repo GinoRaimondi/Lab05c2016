@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import java.io.Serializable;
+
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
@@ -25,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView lvTareas;
 
-    private ProyectoDAO proyectoDAO;
+    public static ProyectoDAO proyectoDAO;
     private Cursor cursor;
     private TareaCursorAdapter tca;
     @Override
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intActAlta= new Intent(MainActivity.this,AltaTareaActivity.class);
                 intActAlta.putExtra("ID_TAREA", 0);
+               // intActAlta.putExtra("DAO", (Parcelable) proyectoDAO);
                 startActivity(intActAlta);
             }
         });

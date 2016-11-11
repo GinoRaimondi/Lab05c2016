@@ -74,6 +74,12 @@ public class ProyectoDAO {
 
     public void nuevaTarea(Tarea t){
 
+        String sql = "INSERT INTO TAREA (DESCRIPCION,HORAS_PLANIFICADAS,MINUTOS_TRABAJDOS,ID_PRIORIDAD,ID_RESPONSABLE,ID_PROYECTO,FINALIZADA) VALUES ('"+t.getDescripcion()+"'," + t.getHorasEstimadas()+"," + t.getMinutosTrabajados()+", 4," + t.getResponsable().getId()+",1,0)";
+        //db.rawQuery()
+        db.execSQL(sql);
+
+        Log.d("llegamos 1","sabe 1");
+
     }
 
     public void actualizarTarea(Tarea t){
@@ -98,8 +104,18 @@ public class ProyectoDAO {
         return null;
     }
 
-    public List<Usuario> listarUsuarios(){
-        return null;
+    public Cursor listarUsuarios(){
+
+        Cursor cursor = db.rawQuery("SELECT "+ProyectoDBMetadata.TablaUsuariosMetadata._ID+" as _id, "+ProyectoDBMetadata.TablaUsuariosMetadata.USUARIO+
+                " FROM "+ProyectoDBMetadata.TABLA_USUARIOS,null);;
+
+        while (cursor.moveToNext()){
+            Log.d("USUARIO", cursor.getString(1));
+            Log.d("NOMBRE", cursor.getColumnName(1));
+        }
+
+
+        return cursor;
     }
 
     public void finalizar(Integer idTarea){
