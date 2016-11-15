@@ -74,7 +74,7 @@ public class ProyectoDAO {
 
     public void nuevaTarea(Tarea t){
 
-        String sql = "INSERT INTO TAREA (DESCRIPCION,HORAS_PLANIFICADAS,MINUTOS_TRABAJDOS,ID_PRIORIDAD,ID_RESPONSABLE,ID_PROYECTO,FINALIZADA) VALUES ('"+t.getDescripcion()+"'," + t.getHorasEstimadas()+"," + t.getMinutosTrabajados()+", 4," + t.getResponsable().getId()+",1,0)";
+        String sql = "INSERT INTO TAREA (DESCRIPCION,HORAS_PLANIFICADAS,MINUTOS_TRABAJDOS,ID_PRIORIDAD,ID_RESPONSABLE,ID_PROYECTO,FINALIZADA) VALUES ('"+t.getDescripcion()+"'," + t.getHorasEstimadas()+"," + t.getMinutosTrabajados()+","+ t.getPrioridad().getId() + "," + t.getResponsable().getId()+",1,0)";
         //db.rawQuery()
         db.execSQL(sql);
 

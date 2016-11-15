@@ -31,6 +31,7 @@ public class AltaTareaActivity extends AppCompatActivity {
     private Button btnCancelar;
     private Integer valorSeekBar;
     private String nombre_usuario;
+    private Integer id_nombre_usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class AltaTareaActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
         btnCancelar = (Button) findViewById(R.id.btnCancelar);
+
+        valorSeekBar = 1;
 
         // Debemos cargar el spinner
 
@@ -66,13 +69,13 @@ public class AltaTareaActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 
-                Cursor c=(Cursor) spinner.getSelectedItem();
+                Cursor c = (Cursor) spinner.getSelectedItem();
 
-                String items=c.getString(c.getColumnIndex(ProyectoDBMetadata.TablaUsuariosMetadata.USUARIO));
+                nombre_usuario = c.getString(c.getColumnIndex(ProyectoDBMetadata.TablaUsuariosMetadata.USUARIO));
+                id_nombre_usuario = c.getInt(c.getColumnIndex(ProyectoDBMetadata.TablaUsuariosMetadata._ID));
 
-                nombre_usuario = items;
 
-                Log.i("Selected item : ", items);
+                Log.i("Selected item : ", nombre_usuario);
 
             }
 
@@ -91,14 +94,35 @@ public class AltaTareaActivity extends AppCompatActivity {
                 //Log.d("llegamos 0","sabe 0");
 
                 Prioridad p = new Prioridad();
+                String prioridad = "Baja";
+                switch (valorSeekBar) {
+                    case 0:
+                        prioridad = "Baja";
+                        break;
+                    case 1:
+                        prioridad = "Urgente";
+                        break;
+                    case 2:
+                        prioridad = "Alta";
+                        break;
+                    case 3:
+                        prioridad = "Media";
+                        break;
+                    case 4:
+                        prioridad = "Baja";
+                        break;
 
-                p.setPrioridad(String.valueOf(valorSeekBar));
+                }
+
+                p.setId(valorSeekBar);
+
+                p.setPrioridad(prioridad);
 
                 //Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString() , Toast.LENGTH_LONG).show();
 
                 Tarea t = new Tarea(5, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
-                        new Proyecto(1, "TP integrador"), p ,
-                        new Usuario(1, nombre_usuario, "sdadad"));
+                        new Proyecto(1, "TP integrador"), p,
+                        new Usuario(id_nombre_usuario, nombre_usuario, "sdadad"));
                 // Debemos ir a ProyectoDAO
                 myDao.nuevaTarea(t);
 
