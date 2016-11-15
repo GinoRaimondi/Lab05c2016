@@ -154,7 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        if(item.getItemId()== R.id.borrarTarea){
+        switch (item.getItemId()) {
+
+
+            case R.id.borrarTarea:
 
             Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
 
