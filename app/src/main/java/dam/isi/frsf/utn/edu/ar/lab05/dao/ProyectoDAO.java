@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -126,7 +127,10 @@ public class ProyectoDAO {
 
     }
 
-    public void borrarTarea(Tarea t){
+    public void borrarTarea(Integer id_tarea){
+
+        db.delete(ProyectoDBMetadata.TABLA_TAREAS,"_ID="+id_tarea,null);
+        Log.d("BORRAR TAREA: ","Se ha borrado la tarea de id: "+ id_tarea);
 
     }
 
