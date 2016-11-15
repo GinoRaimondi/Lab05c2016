@@ -72,6 +72,16 @@ public class ProyectoDAO {
         return cursor;
     }
 
+    public Cursor getTarea(Integer idTarea){
+
+        Cursor cursor = db.rawQuery("SELECT DESCRIPCION,HORAS_PLANIFICADAS,MINUTOS_TRABAJDOS,ID_PRIORIDAD,ID_RESPONSABLE,ID_PROYECTO,FINALIZADA FROM TAREA WHERE _id = ?", new String[] {""+idTarea+""});
+
+        Tarea tarea = new Tarea();
+
+        return cursor;
+
+    }
+
     public void nuevaTarea(Tarea t){
 
         String sql = "INSERT INTO TAREA (DESCRIPCION,HORAS_PLANIFICADAS,MINUTOS_TRABAJDOS,ID_PRIORIDAD,ID_RESPONSABLE,ID_PROYECTO,FINALIZADA) VALUES ('"+t.getDescripcion()+"'," + t.getHorasEstimadas()+"," + t.getMinutosTrabajados()+","+ t.getPrioridad().getId() + "," + t.getResponsable().getId()+",1,0)";
@@ -91,6 +101,26 @@ public class ProyectoDAO {
         //registro.put("_ID",t.getId());
 
         registro.put(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS, t.getMinutosTrabajados());
+
+        db.update(ProyectoDBMetadata.TABLA_TAREAS, registro, "_ID="+t.getId(), null);
+
+    }
+
+    public void actualizarTareaCompleta(Tarea t){
+
+        //TODO
+
+        ContentValues registro = new ContentValues();
+
+        //registro.put("_ID",t.getId());
+
+        registro.put(ProyectoDBMetadata.TablaTareasMetadata.TAREA, t.getDescripcion().toString());
+
+        registro.put(ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS, t.getHorasEstimadas().toString());
+
+        registro.put(ProyectoDBMetadata.TablaTareasMetadata.PRIORIDAD, t.getPrioridad().getId());
+
+        registro.put(ProyectoDBMetadata.TablaTareasMetadata.RESPONSABLE, t.getResponsable().getId());
 
         db.update(ProyectoDBMetadata.TABLA_TAREAS, registro, "_ID="+t.getId(), null);
 
