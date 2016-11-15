@@ -11,11 +11,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.io.Serializable;
@@ -23,6 +27,7 @@ import java.io.Serializable;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         lvTareas = (ListView) findViewById(R.id.listaTareas);
+
+        registerForContextMenu(lvTareas);
 
     }
 
@@ -125,6 +132,36 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Void... values) {
         }
+    }
+
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        Tarea tarea = (Tarea)  lvTareas.getAdapter().getItem(info.position);
+        menu.setHeaderTitle("Opciones para " + tarea.getDescripcion());
+
+        inflater.inflate(R.menu.borrar,menu);
+
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if(item.getItemId()== R.id.borrarTarea){
+
+            Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        return true;
     }
 
 }
