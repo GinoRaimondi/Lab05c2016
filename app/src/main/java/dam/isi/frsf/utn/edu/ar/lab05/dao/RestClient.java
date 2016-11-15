@@ -18,7 +18,7 @@ import java.net.URL;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "192.168.43.36";
+    private final String IP_SERVER = "192.168.1.106";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
     public JSONObject getById(Integer id,String path) {

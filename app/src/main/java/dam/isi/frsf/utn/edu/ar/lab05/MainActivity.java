@@ -27,6 +27,7 @@ import java.io.Serializable;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.ProyectosActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //new LongOperation().execute("");                                        LAB06!!!
+        new LongOperation().execute("");                               //         LAB06!!!
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_gestion_proyectos) {
+            Intent intent = new Intent(this, ProyectosActivity.class);
+            startActivity(intent);
             return true;
         }
 
