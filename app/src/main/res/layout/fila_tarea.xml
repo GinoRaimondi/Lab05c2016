@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
@@ -37,35 +38,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ToggleButton
-            android:id="@+id/tareaBtnTrabajando"
-            android:textOn="trabajando...."
-            android:textOff="trabajar..."
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/tareaBtnEditarDatos"
-            android:text="Editar"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ToggleButton
+                android:id="@+id/tareaBtnTrabajando"
+                android:textOn="trabajando...."
+                android:textOff="trabajar..."
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.13" />
+
+            <Button
+                android:id="@+id/tareaBtnEditarDatos"
+                android:text="Editar"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/tareaBtnFinalizada"
+                android:text="Finalizar!"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:weightSum="1"><![CDATA[
+
             />
-        <Button
-            android:id="@+id/tareaBtnFinalizada"
-            android:text="Finalizar!"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
-        <Button
-        android:id="@+id/tareaBtnBorrar"
-        android:text="Borrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+            ]]>
+
+            <Button
+            android:id="@+id/tareaBtnBorrar"
+            android:text="Borrar"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:translationZ="2dp"
+                android:elevation="10dp"
+                style="@style/Widget.AppCompat.Button.Small" />
+                android:layout_weight="0.23" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
