@@ -1,5 +1,6 @@
 package dam.isi.frsf.utn.edu.ar.lab05;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -33,16 +34,18 @@ public class MainActivity extends AppCompatActivity {
     public static ProyectoDAO proyectoDAO;
     private Cursor cursor;
     private TareaCursorAdapter tca;
+    public static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = getApplicationContext();
 
         setTitle("LABORATORIO 05 - Tareas");
 
-        new LongOperation().execute("");                               //         LAB06!!!
+        //new LongOperation().execute("");                               //         LAB06!!!
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

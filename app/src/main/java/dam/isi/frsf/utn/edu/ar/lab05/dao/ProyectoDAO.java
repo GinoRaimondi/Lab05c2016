@@ -167,5 +167,38 @@ public class ProyectoDAO {
         return null;
     }
 
+    public Integer obtenerMaximoIdValorProyecto(){
+        /*String query = "SELECT * FROM PROYECTO";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()){
+            do{
+
+                System.out.println("tableName: " +cursor.getString(cursor.getColumnIndex("_ID")));
+                System.out.println("autoInc: " + cursor.getString(cursor.getColumnIndex("TITULO")));
+
+            }while (cursor.moveToNext());
+        }
+
+        cursor.close();*/
+
+        String query = "SELECT MAX(_ID) AS max_id FROM PROYECTO";
+        Cursor cursor = db.rawQuery(query, null);
+
+        int id = 0;
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                id = cursor.getInt(0);
+            } while(cursor.moveToNext());
+        }
+
+        System.out.println("ID PROYECTO MAXIMO : " + id);
+
+        return id;
+
+    }
+
 
 }

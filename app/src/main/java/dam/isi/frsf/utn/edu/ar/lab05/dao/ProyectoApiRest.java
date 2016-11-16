@@ -18,6 +18,12 @@ public class ProyectoApiRest {
 
     public void crearProyecto(Proyecto p){
 
+        RestClient cliRest = new RestClient();
+
+        // Crear Object json a partir de p.
+
+        cliRest.crearProyecto(p,"proyectos");
+
     }
     public void borrarProyecto(Integer id){
 

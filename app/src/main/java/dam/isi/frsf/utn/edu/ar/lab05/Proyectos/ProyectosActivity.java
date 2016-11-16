@@ -2,13 +2,11 @@ package dam.isi.frsf.utn.edu.ar.lab05.Proyectos;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,8 +29,9 @@ import java.util.ArrayList;
 
 import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
-import dam.isi.frsf.utn.edu.ar.lab05.Tareas.AltaTareaActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
+import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
@@ -67,15 +66,30 @@ public class ProyectosActivity extends AppCompatActivity {
 
                 builder.setView(input);
 
-
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         m_Text = input.getText().toString();
 
                         // Debemos pegarle a la api rest para insertar un proyecto con descripción m_text
 
+                        ProyectoApiRest rest = new ProyectoApiRest();
 
+                        Proyecto p = new Proyecto();
+
+                        p.setNombre(m_Text);
+
+                        ProyectoDAO pd = MainActivity.proyectoDAO;
+
+                        Integer valorMaximoIdProyectos = pd.obtenerMaximoIdValorProyecto();
+
+                        Integer valorIdActual = valorMaximoIdProyectos + 1;
+
+                        //p.setId(valorIdActual);
+
+                        new CrearProyecto(p).execute("");
 
 
 
@@ -109,6 +123,40 @@ public class ProyectosActivity extends AppCompatActivity {
         //listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, listaProyectos);
         //lvProyectos.setAdapter(listAdapter);
     }
+
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        //Proyecto proyecto = (Proyecto)  lvProyectos.getAdapter().getItem(info.position);
+        //menu.setHeaderTitle("Opciones para " + tarea.getDescripcion());
+
+        inflater.inflate(R.menu.menu_gestion_proyecto,menu);
+
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()) {
+
+
+            case R.id.borrarTarea:
+
+                Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
+
+                return true;
+        }
+
+        return true;
+    }
+
 
     private class TareaAsincronica extends AsyncTask<String, Void, ArrayList<String>> {
         @Override
@@ -147,12 +195,6 @@ public class ProyectosActivity extends AppCompatActivity {
                 }
             };
 
-    /*SET THE ADAPTER TO LISTVIEW*/
-            //setListAdapter(adapter);
-
-
-
-
             lvProyectos.setAdapter(adapter);
         }
 
@@ -166,36 +208,36 @@ public class ProyectosActivity extends AppCompatActivity {
     }
 
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-        //Proyecto proyecto = (Proyecto)  lvProyectos.getAdapter().getItem(info.position);
-        //menu.setHeaderTitle("Opciones para " + tarea.getDescripcion());
-
-        inflater.inflate(R.menu.menu_gestion_proyecto,menu);
-
-    }
-
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        switch (item.getItemId()) {
-
-
-            case R.id.borrarTarea:
-
-                Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
-
-                return true;
+    private class CrearProyecto extends AsyncTask<Object, Object, Integer> {
+        private Proyecto p;
+        public CrearProyecto(Proyecto p){
+            this.p = p;
         }
 
-        return true;
+        @Override
+        protected Integer doInBackground(Object... params) {
+
+            ProyectoApiRest rest = new ProyectoApiRest();
+
+            rest.crearProyecto(p);
+            //return listaProyectos;
+            return 1;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            new TareaAsincronica().execute();
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+        }
     }
 
 
