@@ -11,11 +11,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -47,11 +52,15 @@ public class ProyectosActivity extends AppCompatActivity {
 
         new TareaAsincronica().execute("");
 
+        setTitle("GESTIÓN DE PROYECTOS");
+
         listaProyectos = new ArrayList<String>();
-        listaProyectos.add("proyecto1");
+        /*listaProyectos.add("proyecto1");
         listaProyectos.add("proyecto2");
-        listaProyectos.add("proyecto3");
+        listaProyectos.add("proyecto3");*/
         lvProyectos = (ListView) findViewById(R.id.listaProyectos);
+
+        registerForContextMenu(lvProyectos);
         //listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, listaProyectos);
         //lvProyectos.setAdapter(listAdapter);
     }
@@ -69,7 +78,7 @@ public class ProyectosActivity extends AppCompatActivity {
             listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result);
 
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(
-                    getApplicationContext(), android.R.layout.simple_list_item_1, listaProyectos){
+                    getApplicationContext(), android.R.layout.simple_list_item_1, result){
 
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -109,6 +118,39 @@ public class ProyectosActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Void... values) {
         }
+    }
+
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        //Proyecto proyecto = (Proyecto)  lvProyectos.getAdapter().getItem(info.position);
+        //menu.setHeaderTitle("Opciones para " + tarea.getDescripcion());
+
+        inflater.inflate(R.menu.menu_gestion_proyecto,menu);
+
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()) {
+
+
+            case R.id.borrarTarea:
+
+                Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
+
+                return true;
+        }
+
+        return true;
     }
 
 

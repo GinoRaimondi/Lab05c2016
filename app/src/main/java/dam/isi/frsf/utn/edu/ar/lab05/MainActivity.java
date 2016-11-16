@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTitle("LABORATORIO 05 - Tareas");
+
         new LongOperation().execute("");                               //         LAB06!!!
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
