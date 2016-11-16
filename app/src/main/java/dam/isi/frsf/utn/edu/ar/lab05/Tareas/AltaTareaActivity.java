@@ -1,6 +1,5 @@
-package dam.isi.frsf.utn.edu.ar.lab05;
+package dam.isi.frsf.utn.edu.ar.lab05.Tareas;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -13,8 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
+import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;

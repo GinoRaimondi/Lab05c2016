@@ -21,7 +21,10 @@ import android.widget.Toast;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
+import dam.isi.frsf.utn.edu.ar.lab05.Proyectos.ProyectosActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
+import dam.isi.frsf.utn.edu.ar.lab05.Tareas.AltaTareaActivity;
+import dam.isi.frsf.utn.edu.ar.lab05.Tareas.TareaCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

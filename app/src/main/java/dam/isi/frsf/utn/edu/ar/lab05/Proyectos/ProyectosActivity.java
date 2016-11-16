@@ -1,4 +1,4 @@
-package dam.isi.frsf.utn.edu.ar.lab05;
+package dam.isi.frsf.utn.edu.ar.lab05.Proyectos;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,10 +23,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
