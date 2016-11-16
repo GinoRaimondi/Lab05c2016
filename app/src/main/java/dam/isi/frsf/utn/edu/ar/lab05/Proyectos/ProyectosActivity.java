@@ -59,6 +59,8 @@ public class ProyectosActivity extends AppCompatActivity {
 
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
 
+                input.setHint("Descripción del proyecto");
+
                 /*final TextView textview = new TextView(ProyectosActivity.this);
                 textview.setText("Ingrese descripción");
                 builder.setCustomTitle(textview);*/
@@ -70,6 +72,13 @@ public class ProyectosActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         m_Text = input.getText().toString();
+
+                        // Debemos pegarle a la api rest para insertar un proyecto con descripción m_text
+
+
+
+
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
