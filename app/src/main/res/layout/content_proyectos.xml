@@ -13,4 +13,8 @@
     tools:context="dam.isi.frsf.utn.edu.ar.lab05.modelo.ProyectosActivity"
     tools:showIn="@layout/activity_proyectos">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listaProyectos" />
 </RelativeLayout>

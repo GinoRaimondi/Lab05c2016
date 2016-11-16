@@ -1,8 +1,12 @@
 package dam.isi.frsf.utn.edu.ar.lab05.dao;
 
+import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
@@ -21,8 +25,21 @@ public class ProyectoApiRest {
     public void actualizarProyecto(Proyecto p){
 
     }
-    public List<Proyecto> listarProyectos(){
-        return null;
+    public ArrayList<String> listarProyectos(){
+        ArrayList<String> listaProyectos = new ArrayList<String>();
+        RestClient cliRest = new RestClient();
+        JSONArray array = cliRest.getByAll(null, "proyectos");
+        for(int i=0; i<array.length(); i++){
+            try {
+                JSONObject o = array.getJSONObject(i);
+                listaProyectos.add(o.getString("nombre"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        Log.d("listaProyectosAString: ",listaProyectos.toString());
+        return listaProyectos;
     }
 
     public Proyecto buscarProyecto(Integer id){

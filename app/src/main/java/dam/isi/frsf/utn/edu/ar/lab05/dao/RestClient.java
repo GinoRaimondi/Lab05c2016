@@ -18,9 +18,11 @@ import java.net.URL;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "192.168.1.106";
+    private final String IP_SERVER = "192.168.0.25";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
+
+
     public JSONObject getById(Integer id,String path) {
         JSONObject resultado = null;
         HttpURLConnection urlConnection=null;
@@ -54,6 +56,33 @@ public class RestClient {
 
     public JSONArray getByAll(Integer id,String path) {
         JSONArray resultado = null;
+        HttpURLConnection urlConnection=null;
+        try {
+            URL url = new URL("http://"+IP_SERVER+":"+PORT_SERVER+"/"+path);
+            Log.d("TAG_LOG",url.getPath()+ " --> "+url.toString());
+            urlConnection= (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            InputStreamReader isw = new InputStreamReader(in);
+            StringBuilder sb = new StringBuilder();
+
+            int data = isw.read();
+            while (data != -1) {
+                char current = (char) data;
+                sb.append(current);
+                data = isw.read();
+            }
+            Log.d("TAG_LOG",url.getPath()+ " --> "+sb.toString());
+            resultado = new JSONArray(sb.toString());
+            Log.d("TAG_LOG_RESULTADO"," --> "+resultado);
+        }
+        catch (IOException e) {
+            Log.e("TEST-ARR",e.getMessage(),e);
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if(urlConnection!=null) urlConnection.disconnect();
+        }
         return resultado;
     }
     public void crear(JSONObject objeto,String path) {
