@@ -1,13 +1,18 @@
 package dam.isi.frsf.utn.edu.ar.lab05.Proyectos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.ContextMenu;
@@ -17,19 +22,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
+import dam.isi.frsf.utn.edu.ar.lab05.Tareas.AltaTareaActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
     private ArrayList<String> listaProyectos;
     private ArrayAdapter<String> listAdapter;
+    private String m_Text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +51,40 @@ public class ProyectosActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProyectosActivity.this);
+                builder.setTitle("Crear nuevo Proyecto");
+
+                final EditText input = new EditText(ProyectosActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                /*final TextView textview = new TextView(ProyectosActivity.this);
+                textview.setText("Ingrese descripción");
+                builder.setCustomTitle(textview);*/
+
+                builder.setView(input);
+
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        m_Text = input.getText().toString();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
             }
         });
+
+
 
         new TareaAsincronica().execute("");
 
