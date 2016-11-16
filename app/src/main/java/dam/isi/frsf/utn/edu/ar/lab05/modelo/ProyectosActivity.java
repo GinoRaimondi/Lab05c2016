@@ -1,15 +1,21 @@
 package dam.isi.frsf.utn.edu.ar.lab05.modelo;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -61,7 +67,39 @@ public class ProyectosActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
             listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result);
-            lvProyectos.setAdapter(listAdapter);
+
+            ArrayAdapter<String> adapter=new ArrayAdapter<String>(
+                    getApplicationContext(), android.R.layout.simple_list_item_1, listaProyectos){
+
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View view =super.getView(position, convertView, parent);
+
+                    TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                    /*Elegimos el color*/
+
+                    Integer color = Color.parseColor("#2196F3");
+
+                    textView.setTextColor(color);
+
+                    SpannableString spanString = new SpannableString(textView.getText().toString());
+
+                    spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+
+                    textView.setText(spanString);
+
+                    return view;
+                }
+            };
+
+    /*SET THE ADAPTER TO LISTVIEW*/
+            //setListAdapter(adapter);
+
+
+
+
+            lvProyectos.setAdapter(adapter);
         }
 
         @Override
