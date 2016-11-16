@@ -1,4 +1,4 @@
-package dam.isi.frsf.utn.edu.ar.lab05.modelo;
+package dam.isi.frsf.utn.edu.ar.lab05;
 
 import android.graphics.Color;
 import android.graphics.Typeface;

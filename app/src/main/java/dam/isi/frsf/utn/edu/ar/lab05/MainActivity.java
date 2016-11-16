@@ -2,12 +2,9 @@ package dam.isi.frsf.utn.edu.ar.lab05;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,16 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import java.io.Serializable;
 
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
-import dam.isi.frsf.utn.edu.ar.lab05.modelo.ProyectosActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
