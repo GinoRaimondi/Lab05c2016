@@ -1,8 +1,19 @@
 package dam.isi.frsf.utn.edu.ar.lab05.Tareas;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +23,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
+import dam.isi.frsf.utn.edu.ar.lab05.contactos.Contactos;
+import dam.isi.frsf.utn.edu.ar.lab05.contactos.Permisos;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
@@ -34,6 +54,9 @@ public class AltaTareaActivity extends AppCompatActivity {
     private String nombre_usuario;
     private Integer id_nombre_usuario;
     private Integer idTarea;
+    private ContextCompat context;
+    private boolean flagPermisoPedido;
+    private static final int PERMISSION_REQUEST_CONTACT = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +73,8 @@ public class AltaTareaActivity extends AppCompatActivity {
         btnCancelar = (Button) findViewById(R.id.btnCancelar);
         valorSeekBar = 1;
 
+        askForContactPermission();
+
         final ProyectoDAO myDao = MainActivity.proyectoDAO;
 
         Bundle extras = getIntent().getExtras();
@@ -65,7 +90,7 @@ public class AltaTareaActivity extends AppCompatActivity {
 
             Cursor cursor = myDao.getTarea(idTarea);
 
-            if (cursor.moveToFirst()); // data?
+            if (cursor.moveToFirst()) ; // data?
 
             String descripcionTarea = cursor.getString(cursor.getColumnIndex("DESCRIPCION"));
             String horas_planificadas = cursor.getString(cursor.getColumnIndex("HORAS_PLANIFICADAS"));
@@ -121,7 +146,6 @@ public class AltaTareaActivity extends AppCompatActivity {
                             new Proyecto(1, "TP integrador"), p,
                             new Usuario(id_nombre_usuario, nombre_usuario, "sdadad"));
                     // Debemos ir a ProyectoDAO
-
 
 
                     myDao.actualizarTareaCompleta(t);
@@ -239,4 +263,103 @@ public class AltaTareaActivity extends AppCompatActivity {
         });
 
     }
+
+    public void askForContactPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.CALL_PHONE)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Permisos Peligrosos!!!");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage("Puedo acceder a un permiso peligroso???");
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            flagPermisoPedido = true;
+                            requestPermissions(
+                                    new String[]
+                                            {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS}
+                                    , PERMISSION_REQUEST_CONTACT);
+                        }
+                    });
+                    builder.show();
+                } else {
+                    flagPermisoPedido = true;
+                    ActivityCompat.requestPermissions(this,
+                            new String[]
+                                    {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS}
+                            , PERMISSION_REQUEST_CONTACT);
+                }
+
+            }
+        }
+        if (!flagPermisoPedido) hacerAlgoQueRequeriaPermisosPeligrosos();
+    }
+
+    public void hacerAlgoQueRequeriaPermisosPeligrosos() {
+
+        buscarTodosContactos();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.d("ESCRIBIR_JSON", "req code" + requestCode + " " + Arrays.toString(permissions) + " ** " + Arrays.toString(grantResults));
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CONTACT: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    buscarTodosContactos();
+
+                } else {
+                    Toast.makeText(this, "No permission for contacts", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+
+    }
+
+    public void buscarTodosContactos() {
+        JSONArray arr = new JSONArray();
+        final StringBuilder resultado = new StringBuilder();
+        Uri uri = ContactsContract.Contacts.CONTENT_URI;
+        String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+
+        // consulta ejemplo buscando por nombre visualizado en los contactos agregados
+        Cursor c = this.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
+
+        //Cursor c = this.getContentResolver().query(uri, null, ContactsContract.Contacts.DISPLAY_NAME, null, sortOrder);
+        int count = c.getColumnCount();
+        int fila = 0;
+        String[] columnas = new String[count];
+        try {
+            while (c.moveToNext()) {
+                JSONObject unContacto = new JSONObject();
+                for (int i = 0; (i < count); i++) {
+                    if (fila == 0) columnas[i] = c.getColumnName(i);
+                    unContacto.put(columnas[i], c.getString(i));
+                }
+                Log.d("TEST-ARR", unContacto.toString());
+                arr.put(fila, unContacto);
+                fila++;
+                Log.d("TEST-ARR", "fila : " + fila);
+
+                // elegir columnas de ejemplo
+                resultado.append(unContacto.get("name_raw_contact_id") + " - " + unContacto.get("display_name") + System.getProperty("line.separator"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d("TEST-ARR", resultado.toString());
+    }
+
+
 }
+
+
