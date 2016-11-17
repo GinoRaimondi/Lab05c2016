@@ -38,7 +38,8 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
     private ArrayList<String> listaProyectos;
-    private ArrayList<Integer> idProyectos;
+    private ArrayList<Proyecto> idProyectos;
+
     private ArrayAdapter<String> listAdapter;
     private String m_Text;
     private Integer max_value;
@@ -153,7 +154,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
             case R.id.botonBorrarProyecto:
                 Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
-                new CrearProyecto(null,2,idProyectos.get(info.position)).execute("");
+                new CrearProyecto(null,2,idProyectos.get(info.position).getId()).execute("");
                 Log.d("ITEM ID: ", ""+idProyectos.get(info.position));
         }
 
@@ -161,20 +162,26 @@ public class ProyectosActivity extends AppCompatActivity {
     }
 
 
-    private class TareaAsincronica extends AsyncTask<String, Void, ArrayList<ArrayList>> {
+    private class TareaAsincronica extends AsyncTask<String, Void, ArrayList<Proyecto>> {
         @Override
-        protected ArrayList<ArrayList> doInBackground(String... params) {
+        protected ArrayList<Proyecto> doInBackground(String... params) {
             ProyectoApiRest rest = new ProyectoApiRest();
-            ArrayList<ArrayList> listaProyectos = rest.listarProyectos();
+            ArrayList<Proyecto> listaProyectos = rest.listarProyectos();
             return listaProyectos;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<ArrayList> result) {
-            listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result.get(1));
-            idProyectos = result.get(0);
-            ArrayAdapter<String> adapter=new ArrayAdapter<String>(
-                    getApplicationContext(), android.R.layout.simple_list_item_1, result.get(1)){
+        protected void onPostExecute(ArrayList<Proyecto> result) {
+            //listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result.get(1));
+
+
+            // Seteamos el listado de proyectos a la variable global que mantiene los proyectos traidos de la api rest.
+            idProyectos = result;
+
+
+            ArrayAdapter<Proyecto> adapter=new ArrayAdapter<Proyecto>(
+
+                    getApplicationContext(), android.R.layout.simple_list_item_1, result){
 
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -198,7 +205,12 @@ public class ProyectosActivity extends AppCompatActivity {
                 }
             };
 
-            lvProyectos.setAdapter(adapter);
+            //ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
+
+            ProyectosAdapter p = new ProyectosAdapter(getApplicationContext(), result);
+
+            lvProyectos.setAdapter(p);
+
         }
 
         @Override

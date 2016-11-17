@@ -61,7 +61,7 @@ public class ProyectoApiRest {
 
     }
 
-    public ArrayList<ArrayList> listarProyectos(){
+    /*public ArrayList<ArrayList> listarProyectos(){
         ArrayList<String> listaProyectos = new ArrayList<String>();
         ArrayList<Integer> idProyectos = new ArrayList<Integer>();
         ArrayList<ArrayList> resultado = new ArrayList<ArrayList>();
@@ -81,6 +81,27 @@ public class ProyectoApiRest {
         resultado.add(listaProyectos);
         Log.d("listaProyectosAString: ",listaProyectos.toString());
         return resultado;
+    }*/
+
+    public ArrayList<Proyecto> listarProyectos(){
+        ArrayList<Proyecto> listaProyectos = new ArrayList<Proyecto>();
+        RestClient cliRest = new RestClient();
+        JSONArray array = cliRest.getByAll(null, "proyectos");
+        for(int i=0; i<array.length(); i++){
+            try {
+                JSONObject o = array.getJSONObject(i);
+                Proyecto p = new Proyecto();
+                p.setNombre(o.getString("nombre"));
+                p.setId(Integer.parseInt(o.getString("id")));
+
+                listaProyectos.add(p);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        Log.d("listaProyectosAString: ",listaProyectos.toString());
+        return listaProyectos;
     }
 
     public Proyecto buscarProyecto(Integer id){
