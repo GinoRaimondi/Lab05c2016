@@ -38,7 +38,7 @@ import static android.R.attr.path;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "192.168.0.25";
+    private final String IP_SERVER = "10.15.152.124";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
 

@@ -41,7 +41,7 @@ public class Proyecto {
 
         JSONObject jsonObject= new JSONObject();
         try {
-            //jsonObject.put("id", getId()+"");
+            jsonObject.put("id", getId()+"");
             jsonObject.put("nombre", getNombre());
 
             return jsonObject;

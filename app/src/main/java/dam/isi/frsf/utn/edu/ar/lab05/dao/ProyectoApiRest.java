@@ -30,9 +30,37 @@ public class ProyectoApiRest {
         RestClient cliRest = new RestClient();
         cliRest.borrar(id,"proyectos");
     }
+
+    public Integer getMaxId() throws JSONException {
+
+        RestClient cliRest = new RestClient();
+
+        // Crear Object json a partir de p.
+
+        JSONArray j = cliRest.getByAll(null,"proyectos");
+
+        Integer maxId = 1;
+
+        for (int i=0; i<j.length(); i++) {
+            JSONObject actor = j.getJSONObject(i);
+            String name = actor.getString("id");
+
+            Integer val = Integer.parseInt(name);
+            if (val>maxId)
+                maxId = val;
+
+            //Log.d("nooooombre ", name );
+            //allNames.add(name);
+        }
+
+        return maxId +1;
+
+    }
+
     public void actualizarProyecto(Proyecto p){
 
     }
+
     public ArrayList<ArrayList> listarProyectos(){
         ArrayList<String> listaProyectos = new ArrayList<String>();
         ArrayList<Integer> idProyectos = new ArrayList<Integer>();

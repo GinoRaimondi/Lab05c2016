@@ -41,6 +41,8 @@ public class ProyectosActivity extends AppCompatActivity {
     private ArrayList<Integer> idProyectos;
     private ArrayAdapter<String> listAdapter;
     private String m_Text;
+    private Integer max_value;
+    private Proyecto p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,20 +82,19 @@ public class ProyectosActivity extends AppCompatActivity {
 
                         ProyectoApiRest rest = new ProyectoApiRest();
 
-                        Proyecto p = new Proyecto();
+                        p = new Proyecto();
 
                         p.setNombre(m_Text);
 
-                        ProyectoDAO pd = MainActivity.proyectoDAO;
+                        //ProyectoDAO pd = MainActivity.proyectoDAO;
 
-                        Integer valorMaximoIdProyectos = pd.obtenerMaximoIdValorProyecto();
+                        //Integer valorMaximoIdProyectos = pd.obtenerMaximoIdValorProyecto();
 
-                        Integer valorIdActual = valorMaximoIdProyectos + 1;
+                        //Integer valorIdActual = valorMaximoIdProyectos + 1;
 
-                        //p.setId(valorIdActual);
+                        // Debo obtener el id mas grande desde la api rest.
 
-                        new CrearProyecto(p,1,null).execute("");
-
+                        new GetMaxId().execute();
 
 
                     }
@@ -257,6 +258,52 @@ public class ProyectosActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Object... values) {
         }
+    }
+
+    private class GetMaxId extends AsyncTask<Object, Object, Integer> {
+
+        public GetMaxId(){
+
+        }
+
+        @Override
+        protected Integer doInBackground(Object... params) {
+
+            Integer valor=100;
+
+            ProyectoApiRest rest = new ProyectoApiRest();
+
+            try {
+                valor = rest.getMaxId();
+            } catch (Exception e){
+
+            }
+
+            return valor;
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            max_value = result;
+
+            p.setId(max_value);
+
+            new CrearProyecto(p,1,null).execute("");
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+
+        }
+
     }
 
 
