@@ -23,22 +23,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
-    private ArrayList<String> listaProyectos;
-    private ArrayList<Proyecto> idProyectos;
+    private ArrayList<Proyecto> listaProyectos;
 
     private ArrayAdapter<String> listAdapter;
     private String m_Text;
@@ -118,7 +114,6 @@ public class ProyectosActivity extends AppCompatActivity {
 
         setTitle("GESTIÓN DE PROYECTOS");
 
-        listaProyectos = new ArrayList<String>();
         /*listaProyectos.add("proyecto1");
         listaProyectos.add("proyecto2");
         listaProyectos.add("proyecto3");*/
@@ -152,10 +147,60 @@ public class ProyectosActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
 
-            case R.id.botonBorrarProyecto:
+            case R.id.botonBorrarProyecto: {
                 Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
-                new CrearProyecto(null,2,idProyectos.get(info.position).getId()).execute("");
-                Log.d("ITEM ID: ", ""+idProyectos.get(info.position));
+                new GestionarProyecto(null, 2, listaProyectos.get(info.position).getId()).execute("");
+                Log.d("ITEM ID: ", "" + listaProyectos.get(info.position));
+            }break;
+            case R.id.botonEditarProyecto: {
+
+                p = listaProyectos.get(info.position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProyectosActivity.this);
+                builder.setTitle("Editar Proyecto");
+
+                final EditText input = new EditText(ProyectosActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                input.setText(p.getNombre().toString());
+
+                /*final TextView textview = new TextView(ProyectosActivity.this);
+                textview.setText("Ingrese descripción");
+                builder.setCustomTitle(textview);*/
+
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        m_Text = input.getText().toString();
+                        p.setNombre(m_Text);
+
+                        new GestionarProyecto(p, 3, null).execute("");
+                        Log.d("ITEM ID: ", "" + p);
+
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+
+            }break;
+            case R.id.botonVerTareas: {
+                new GestionarProyecto(listaProyectos.get(info.position), 4, null).execute("");
+                Log.d("ITEM ID: ", "" + listaProyectos.get(info.position));
+            }break;
+
         }
 
         return true;
@@ -176,7 +221,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
 
             // Seteamos el listado de proyectos a la variable global que mantiene los proyectos traidos de la api rest.
-            idProyectos = result;
+            listaProyectos = result;
 
 
             ArrayAdapter<Proyecto> adapter=new ArrayAdapter<Proyecto>(
@@ -223,11 +268,11 @@ public class ProyectosActivity extends AppCompatActivity {
     }
 
 
-    private class CrearProyecto extends AsyncTask<Object, Object, Integer> {
+    private class GestionarProyecto extends AsyncTask<Object, Object, Integer> {
         private Proyecto p;
-        private Integer i;
+        private Integer i;   //Valor que indica la operación que se quiere realizar: 1:crear, 2:borrar, 3:actualizar
         private Integer id;
-        public CrearProyecto(Proyecto p, Integer i, Integer id){
+        public GestionarProyecto(Proyecto p, Integer i, Integer id){
             this.p = p;
             this.i = i;
             this.id = id;
@@ -246,13 +291,12 @@ public class ProyectosActivity extends AppCompatActivity {
                     rest.borrarProyecto(id);
                 }break;
                 case 3:{
-
+                    rest.actualizarProyecto(p);
                 }break;
                 case 4:{
-
+                    rest.verTareas(p);
                 }break;
             }
-            //return listaProyectos;
             return 1;
         }
 
@@ -302,7 +346,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
             p.setId(max_value);
 
-            new CrearProyecto(p,1,null).execute("");
+            new GestionarProyecto(p,1,null).execute("");
 
         }
 

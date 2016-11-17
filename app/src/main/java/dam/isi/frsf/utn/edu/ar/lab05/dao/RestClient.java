@@ -38,7 +38,7 @@ import static android.R.attr.path;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "10.15.152.124";
+    private final String IP_SERVER = "10.15.150.115";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
 
@@ -195,7 +195,41 @@ public class RestClient {
 
 
 
-    public void actualizar(JSONObject objeto,String path) {
+    public void actualizar(Proyecto p,String path) {
+        HttpURLConnection urlConnection=null;
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy mm:ss SSS");
+        try {
+
+
+            JSONObject nuevoObjeto= new JSONObject();
+            nuevoObjeto = p.toJSON();
+            //nuevoObjeto.put("nombre", p.getNombre());
+
+            String str= nuevoObjeto.toString();
+            byte[] data=str.getBytes("UTF-8");
+            Log.d("EjemploPost","str---> "+str);
+
+
+            URL url = new URL("http://"+IP_SERVER+":"+PORT_SERVER+"/"+path+"/"+p.getId());
+            Log.d("EjemploPost","str---> "+url.toString());
+            // VER AQUI https://developer.android.com/reference/java/net/HttpURLConnection.html
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("PUT");
+            urlConnection.setFixedLengthStreamingMode(data.length);
+            urlConnection.setRequestProperty("Content-Type","application/json");
+            DataOutputStream printout = new DataOutputStream(urlConnection.getOutputStream());
+
+            printout.write(data);
+            printout.flush ();
+            printout.close ();
+
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }finally {
+            urlConnection.disconnect();
+        }
     }
 
     public void borrar(Integer id,String path) {

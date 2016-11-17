@@ -39,7 +39,7 @@ public class ProyectoApiRest {
 
         JSONArray j = cliRest.getByAll(null,"proyectos");
 
-        Integer maxId = 1;
+        Integer maxId = 0;
 
         for (int i=0; i<j.length(); i++) {
             JSONObject actor = j.getJSONObject(i);
@@ -58,6 +58,9 @@ public class ProyectoApiRest {
     }
 
     public void actualizarProyecto(Proyecto p){
+
+        RestClient cliRest = new RestClient();
+        cliRest.actualizar(p,"proyectos");
 
     }
 
@@ -123,4 +126,9 @@ public class ProyectoApiRest {
         return p;
     }
 
+    public void verTareas(Proyecto p) {
+        RestClient cliRest = new RestClient();
+        JSONArray array = cliRest.getByAll(0,"tareas?proyectoId="+p.getId());
+        Log.d("Tareas del Proyecto: "+p.getId(),array.toString());
+    }
 }
