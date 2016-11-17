@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
@@ -36,7 +38,7 @@ import static android.R.attr.path;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "192.168.1.105";
+    private final String IP_SERVER = "192.168.0.25";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
 
@@ -197,5 +199,24 @@ public class RestClient {
     }
 
     public void borrar(Integer id,String path) {
+        HttpURLConnection urlConnection=null;
+
+        try {
+            URL url = new URL("http://"+IP_SERVER+":"+PORT_SERVER+"/"+path+"/"+id);
+            Log.d("URL DELETE","---> "+url.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("DELETE");
+            System.out.println(urlConnection.getResponseCode());
+
+
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+        urlConnection.disconnect();
+    }
+
     }
 }

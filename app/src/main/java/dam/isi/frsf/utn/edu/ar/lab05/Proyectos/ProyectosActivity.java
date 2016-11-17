@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 public class ProyectosActivity extends AppCompatActivity {
     private ListView lvProyectos;
     private ArrayList<String> listaProyectos;
+    private ArrayList<Integer> idProyectos;
     private ArrayAdapter<String> listAdapter;
     private String m_Text;
 
@@ -89,7 +92,7 @@ public class ProyectosActivity extends AppCompatActivity {
 
                         //p.setId(valorIdActual);
 
-                        new CrearProyecto(p).execute("");
+                        new CrearProyecto(p,1,null).execute("");
 
 
 
@@ -147,31 +150,30 @@ public class ProyectosActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
 
-            case R.id.borrarTarea:
-
+            case R.id.botonBorrarProyecto:
                 Toast.makeText(this, "Borrando la tarea", Toast.LENGTH_LONG).show();
-
-                return true;
+                new CrearProyecto(null,2,idProyectos.get(info.position)).execute("");
+                Log.d("ITEM ID: ", ""+idProyectos.get(info.position));
         }
 
         return true;
     }
 
 
-    private class TareaAsincronica extends AsyncTask<String, Void, ArrayList<String>> {
+    private class TareaAsincronica extends AsyncTask<String, Void, ArrayList<ArrayList>> {
         @Override
-        protected ArrayList<String> doInBackground(String... params) {
+        protected ArrayList<ArrayList> doInBackground(String... params) {
             ProyectoApiRest rest = new ProyectoApiRest();
-            ArrayList<String> listaProyectos = rest.listarProyectos();
+            ArrayList<ArrayList> listaProyectos = rest.listarProyectos();
             return listaProyectos;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> result) {
-            listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result);
-
+        protected void onPostExecute(ArrayList<ArrayList> result) {
+            listAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, result.get(1));
+            idProyectos = result.get(0);
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(
-                    getApplicationContext(), android.R.layout.simple_list_item_1, result){
+                    getApplicationContext(), android.R.layout.simple_list_item_1, result.get(1)){
 
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -210,8 +212,12 @@ public class ProyectosActivity extends AppCompatActivity {
 
     private class CrearProyecto extends AsyncTask<Object, Object, Integer> {
         private Proyecto p;
-        public CrearProyecto(Proyecto p){
+        private Integer i;
+        private Integer id;
+        public CrearProyecto(Proyecto p, Integer i, Integer id){
             this.p = p;
+            this.i = i;
+            this.id = id;
         }
 
         @Override
@@ -219,7 +225,20 @@ public class ProyectosActivity extends AppCompatActivity {
 
             ProyectoApiRest rest = new ProyectoApiRest();
 
-            rest.crearProyecto(p);
+            switch(i){
+                case 1: {
+                    rest.crearProyecto(p);
+                }break;
+                case 2:{
+                    rest.borrarProyecto(id);
+                }break;
+                case 3:{
+
+                }break;
+                case 4:{
+
+                }break;
+            }
             //return listaProyectos;
             return 1;
         }

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
 
 /**
@@ -26,26 +27,32 @@ public class ProyectoApiRest {
 
     }
     public void borrarProyecto(Integer id){
-
+        RestClient cliRest = new RestClient();
+        cliRest.borrar(id,"proyectos");
     }
     public void actualizarProyecto(Proyecto p){
 
     }
-    public ArrayList<String> listarProyectos(){
+    public ArrayList<ArrayList> listarProyectos(){
         ArrayList<String> listaProyectos = new ArrayList<String>();
+        ArrayList<Integer> idProyectos = new ArrayList<Integer>();
+        ArrayList<ArrayList> resultado = new ArrayList<ArrayList>();
         RestClient cliRest = new RestClient();
         JSONArray array = cliRest.getByAll(null, "proyectos");
         for(int i=0; i<array.length(); i++){
             try {
                 JSONObject o = array.getJSONObject(i);
                 listaProyectos.add(o.getString("nombre"));
+                idProyectos.add(o.getInt("id"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+        resultado.add(idProyectos);
+        resultado.add(listaProyectos);
         Log.d("listaProyectosAString: ",listaProyectos.toString());
-        return listaProyectos;
+        return resultado;
     }
 
     public Proyecto buscarProyecto(Integer id){
