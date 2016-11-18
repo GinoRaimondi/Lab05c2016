@@ -57,6 +57,32 @@ public class ProyectoApiRest {
 
     }
 
+    public Integer getMaxIdUser() throws JSONException {
+
+        RestClient cliRest = new RestClient();
+
+        // Crear Object json a partir de p.
+
+        JSONArray j = cliRest.getByAll(null,"usuarios");
+
+        Integer maxId = 0;
+
+        for (int i=0; i<j.length(); i++) {
+            JSONObject actor = j.getJSONObject(i);
+            String name = actor.getString("id");
+
+            Integer val = Integer.parseInt(name);
+            if (val>maxId)
+                maxId = val;
+
+            //Log.d("nooooombre ", name );
+            //allNames.add(name);
+        }
+
+        return maxId +1;
+
+    }
+
     public void actualizarProyecto(Proyecto p){
 
         RestClient cliRest = new RestClient();

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
@@ -34,9 +35,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
+import dam.isi.frsf.utn.edu.ar.lab05.Proyectos.ProyectosActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.contactos.Contactos;
 import dam.isi.frsf.utn.edu.ar.lab05.contactos.Permisos;
+import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
@@ -59,8 +62,11 @@ public class AltaTareaActivity extends AppCompatActivity {
     private Spinner spinner_contactos;
     private ContextCompat context;
     private ArrayList<Usuario> usuarios_contactos;
+    public Tarea t;
+    public Proyecto p;
     private boolean flagPermisoPedido;
     private static final int PERMISSION_REQUEST_CONTACT = 999;
+    ProyectoDAO myDao = new ProyectoDAO(null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +87,7 @@ public class AltaTareaActivity extends AppCompatActivity {
 
         askForContactPermission();
 
-        final ProyectoDAO myDao = MainActivity.proyectoDAO;
+        myDao = MainActivity.proyectoDAO;
 
         Bundle extras = getIntent().getExtras();
 
@@ -120,41 +126,12 @@ public class AltaTareaActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     //Log.d("llegamos 0","sabe 0");
+                    new GetMaxIdUser().execute();
 
-                    Prioridad p = new Prioridad();
-                    String prioridad = "Baja";
-                    switch (valorSeekBar) {
-                        case 0:
-                            prioridad = "Baja";
-                            break;
-                        case 1:
-                            prioridad = "Urgente";
-                            break;
-                        case 2:
-                            prioridad = "Alta";
-                            break;
-                        case 3:
-                            prioridad = "Media";
-                            break;
-                        case 4:
-                            prioridad = "Baja";
-                            break;
-
-                    }
-
-                    p.setId(valorSeekBar);
-
-                    p.setPrioridad(prioridad);
 
                     //Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString() , Toast.LENGTH_LONG).show();
 
-                    Tarea t = new Tarea(idTarea, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
-                            new Proyecto(1, "TP integrador"), p,
-                            new Usuario(id_nombre_usuario, nombre_usuario, "sdadad"));
-                    // Debemos ir a ProyectoDAO
 
-
-                    myDao.actualizarTareaCompleta(t);
 
                 }
             });
@@ -170,38 +147,12 @@ public class AltaTareaActivity extends AppCompatActivity {
 
                     //Log.d("llegamos 0","sabe 0");
 
-                    Prioridad p = new Prioridad();
-                    String prioridad = "Baja";
-                    switch (valorSeekBar) {
-                        case 0:
-                            prioridad = "Baja";
-                            break;
-                        case 1:
-                            prioridad = "Urgente";
-                            break;
-                        case 2:
-                            prioridad = "Alta";
-                            break;
-                        case 3:
-                            prioridad = "Media";
-                            break;
-                        case 4:
-                            prioridad = "Baja";
-                            break;
 
-                    }
-
-                    p.setId(valorSeekBar);
-
-                    p.setPrioridad(prioridad);
 
                     //Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString() , Toast.LENGTH_LONG).show();
 
-                    Tarea t = new Tarea(5, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
-                            new Proyecto(1, "TP integrador"), p,
-                            new Usuario(id_nombre_usuario, nombre_usuario, "sdadad"));
-                    // Debemos ir a ProyectoDAO
-                    myDao.nuevaTarea(t);
+                    new CrearTarea().execute();
+
 
                 }
             });
@@ -223,6 +174,8 @@ public class AltaTareaActivity extends AppCompatActivity {
 
         spinner.setAdapter(sca);
 
+        spinner.setVisibility(View.GONE);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -243,6 +196,25 @@ public class AltaTareaActivity extends AppCompatActivity {
             }
 
         });
+
+        spinner_contactos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+                nombre_usuario = spinner_contactos.getSelectedItem().toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+                nombre_usuario = "DENIS";
+
+            }
+
+        });
+
 
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -416,6 +388,155 @@ public class AltaTareaActivity extends AppCompatActivity {
 
 
         return  usuarios;
+    }
+
+
+    private class GetMaxIdUser extends AsyncTask<Object, Object, Integer> {
+
+        public GetMaxIdUser(){
+
+        }
+
+        @Override
+        protected Integer doInBackground(Object... params) {
+
+            Integer valor=100;
+
+            ProyectoApiRest rest = new ProyectoApiRest();
+
+            try {
+                valor = rest.getMaxIdUser();
+            } catch (Exception e){
+
+            }
+
+            return valor;
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            id_nombre_usuario = result;
+
+            Prioridad p = new Prioridad();
+            String prioridad = "Baja";
+            switch (valorSeekBar) {
+                case 0:
+                    prioridad = "Baja";
+                    break;
+                case 1:
+                    prioridad = "Urgente";
+                    break;
+                case 2:
+                    prioridad = "Alta";
+                    break;
+                case 3:
+                    prioridad = "Media";
+                    break;
+                case 4:
+                    prioridad = "Baja";
+                    break;
+
+            }
+
+            p.setId(valorSeekBar);
+
+            p.setPrioridad(prioridad);
+
+            Tarea t = new Tarea(idTarea, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
+                    new Proyecto(1, "TP integrador"), p,
+                    new Usuario(/*id_nombre_usuario*/1, nombre_usuario, "sdadad"));
+            // Debemos ir a ProyectoDAO
+
+
+            myDao.actualizarTareaCompleta(t);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+
+        }
+
+    }
+
+    private class CrearTarea extends AsyncTask<Object, Object, Integer> {
+
+        public CrearTarea(){
+
+        }
+
+        @Override
+        protected Integer doInBackground(Object... params) {
+
+            Integer valor=100;
+
+            ProyectoApiRest rest = new ProyectoApiRest();
+
+            try {
+                valor = rest.getMaxIdUser();
+            } catch (Exception e){
+
+            }
+
+            return valor;
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            id_nombre_usuario = result;
+
+            Prioridad p = new Prioridad();
+            String prioridad = "Baja";
+            switch (valorSeekBar) {
+                case 0:
+                    prioridad = "Baja";
+                    break;
+                case 1:
+                    prioridad = "Urgente";
+                    break;
+                case 2:
+                    prioridad = "Alta";
+                    break;
+                case 3:
+                    prioridad = "Media";
+                    break;
+                case 4:
+                    prioridad = "Baja";
+                    break;
+
+            }
+
+            p.setId(valorSeekBar);
+
+            p.setPrioridad(prioridad);
+
+            Tarea t = new Tarea(idTarea, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
+                    new Proyecto(1, "TP integrador"), p,
+                    new Usuario(/*id_nombre_usuario*/1, nombre_usuario, "sdadad"));
+
+            myDao.nuevaTarea(t);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+
+        }
+
     }
 
 }
