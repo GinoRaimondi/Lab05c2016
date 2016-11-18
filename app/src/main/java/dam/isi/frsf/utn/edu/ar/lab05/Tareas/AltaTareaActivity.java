@@ -132,7 +132,6 @@ public class AltaTareaActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString() , Toast.LENGTH_LONG).show();
 
 
-
                 }
             });
 
@@ -146,7 +145,6 @@ public class AltaTareaActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     //Log.d("llegamos 0","sabe 0");
-
 
 
                     //Toast.makeText(getApplicationContext(), spinner.getSelectedItem().toString() , Toast.LENGTH_LONG).show();
@@ -216,7 +214,6 @@ public class AltaTareaActivity extends AppCompatActivity {
         });
 
 
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -283,7 +280,7 @@ public class AltaTareaActivity extends AppCompatActivity {
         ArrayList<String> a = new ArrayList<String>();
 
 
-        for (Integer i = 0; i< usuarios_contactos.size(); i++){
+        for (Integer i = 0; i < usuarios_contactos.size(); i++) {
 
             a.add(usuarios_contactos.get(i).getNombre().toString());
 
@@ -309,7 +306,7 @@ public class AltaTareaActivity extends AppCompatActivity {
                     ArrayList<String> a = new ArrayList<String>();
 
 
-                    for (Integer i = 0; i< usuarios_contactos.size(); i++){
+                    for (Integer i = 0; i < usuarios_contactos.size(); i++) {
 
                         a.add(usuarios_contactos.get(i).getNombre().toString());
 
@@ -386,27 +383,26 @@ public class AltaTareaActivity extends AppCompatActivity {
         }*/
 
 
-
-        return  usuarios;
+        return usuarios;
     }
 
 
     private class GetMaxIdUser extends AsyncTask<Object, Object, Integer> {
 
-        public GetMaxIdUser(){
+        public GetMaxIdUser() {
 
         }
 
         @Override
         protected Integer doInBackground(Object... params) {
 
-            Integer valor=100;
+            Integer valor = 100;
 
             ProyectoApiRest rest = new ProyectoApiRest();
 
             try {
                 valor = rest.getMaxIdUser();
-            } catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -468,20 +464,20 @@ public class AltaTareaActivity extends AppCompatActivity {
 
     private class CrearTarea extends AsyncTask<Object, Object, Integer> {
 
-        public CrearTarea(){
+        public CrearTarea() {
 
         }
 
         @Override
         protected Integer doInBackground(Object... params) {
 
-            Integer valor=100;
+            Integer valor = 100;
 
             ProyectoApiRest rest = new ProyectoApiRest();
 
             try {
                 valor = rest.getMaxIdUser();
-            } catch (Exception e){
+            } catch (Exception e) {
 
             }
 
