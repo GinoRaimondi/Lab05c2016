@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -29,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import dam.isi.frsf.utn.edu.ar.lab05.MainActivity;
@@ -54,15 +56,17 @@ public class AltaTareaActivity extends AppCompatActivity {
     private String nombre_usuario;
     private Integer id_nombre_usuario;
     private Integer idTarea;
+    private Spinner spinner_contactos;
     private ContextCompat context;
+    private ArrayList<Usuario> usuarios_contactos;
     private boolean flagPermisoPedido;
     private static final int PERMISSION_REQUEST_CONTACT = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_alta_tarea);
 
         descripcion = (EditText) findViewById(R.id.descripcion);
@@ -71,6 +75,8 @@ public class AltaTareaActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
         btnCancelar = (Button) findViewById(R.id.btnCancelar);
+        spinner_contactos = (Spinner) findViewById(R.id.spinner_contactos);
+
         valorSeekBar = 1;
 
         askForContactPermission();
@@ -300,7 +306,20 @@ public class AltaTareaActivity extends AppCompatActivity {
 
     public void hacerAlgoQueRequeriaPermisosPeligrosos() {
 
-        buscarTodosContactos();
+        usuarios_contactos = buscarTodosContactos();
+
+        ArrayList<String> a = new ArrayList<String>();
+
+
+        for (Integer i = 0; i< usuarios_contactos.size(); i++){
+
+            a.add(usuarios_contactos.get(i).getNombre().toString());
+
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, a);
+        spinner_contactos.setAdapter(adapter);
 
     }
 
@@ -313,7 +332,20 @@ public class AltaTareaActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    buscarTodosContactos();
+                    usuarios_contactos = buscarTodosContactos();
+
+                    ArrayList<String> a = new ArrayList<String>();
+
+
+                    for (Integer i = 0; i< usuarios_contactos.size(); i++){
+
+                        a.add(usuarios_contactos.get(i).getNombre().toString());
+
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                            android.R.layout.simple_spinner_item, a);
+                    spinner_contactos.setAdapter(adapter);
 
                 } else {
                     Toast.makeText(this, "No permission for contacts", Toast.LENGTH_SHORT).show();
@@ -324,7 +356,10 @@ public class AltaTareaActivity extends AppCompatActivity {
 
     }
 
-    public void buscarTodosContactos() {
+    public ArrayList<Usuario> buscarTodosContactos() {
+
+        ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+
         JSONArray arr = new JSONArray();
         final StringBuilder resultado = new StringBuilder();
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
@@ -352,13 +387,36 @@ public class AltaTareaActivity extends AppCompatActivity {
 
                 // elegir columnas de ejemplo
                 resultado.append(unContacto.get("name_raw_contact_id") + " - " + unContacto.get("display_name") + System.getProperty("line.separator"));
+
+                Usuario usuario = new Usuario();
+                usuario.setId(fila);
+                usuario.setNombre(unContacto.get("display_name").toString());
+                usuarios.add(usuario);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Log.d("TEST-ARR", resultado.toString());
-    }
 
+
+        /*this.arraySpinner = new String[] {
+                "1", "2", "3", "4", "5"
+        };*/
+
+        /*ArrayList<String> a = new ArrayList<String>();
+
+
+        for (Integer i = 0; i< usuarios_contactos.size(); i++){
+
+            a.add(usuarios_contactos.get(i).getNombre().toString());
+
+        }*/
+
+
+
+        return  usuarios;
+    }
 
 }
 
