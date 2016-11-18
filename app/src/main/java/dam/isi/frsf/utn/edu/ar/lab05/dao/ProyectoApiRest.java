@@ -11,6 +11,7 @@ import java.util.List;
 
 import dam.isi.frsf.utn.edu.ar.lab05.R;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
 
 /**
  * Created by martdominguez on 20/10/2016.
@@ -156,5 +157,25 @@ public class ProyectoApiRest {
         RestClient cliRest = new RestClient();
         JSONArray array = cliRest.getByAll(0,"tareas?proyectoId="+p.getId());
         Log.d("Tareas del Proyecto: "+p.getId(),array.toString());
+    }
+
+    public Integer existeUsuario(String nombre_usuario) {
+        Integer idResultado=0;
+        RestClient cliRest = new RestClient();
+        JSONArray jsonArray = cliRest.getByAll(null,"usuarios?nombre="+nombre_usuario);
+        if (jsonArray.length()>0){
+            try {
+                JSONObject o = jsonArray.getJSONObject(0);
+                idResultado= o.getInt("id");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return idResultado;
+    }
+
+    public void crearUsuario(Usuario u) {
+        RestClient cliRest = new RestClient();
+        cliRest.crearUsuario(u,"usuarios");
     }
 }

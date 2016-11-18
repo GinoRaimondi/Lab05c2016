@@ -29,6 +29,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
 
 import static android.R.attr.id;
 import static android.R.attr.path;
@@ -38,7 +39,7 @@ import static android.R.attr.path;
  */
 public class RestClient {
 
-    private final String IP_SERVER = "10.15.150.115";
+    private final String IP_SERVER = "192.168.0.25";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
 
@@ -250,7 +251,45 @@ public class RestClient {
             e.printStackTrace();
         }finally {
         urlConnection.disconnect();
-    }
+        }
 
     }
+
+    public void crearUsuario(Usuario u, String path){
+
+        HttpURLConnection urlConnection=null;
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy mm:ss SSS");
+        try {
+            JSONObject nuevoObjeto= new JSONObject();
+            nuevoObjeto = u.toJSON();
+            //nuevoObjeto.put("nombre", p.getNombre());
+
+            String str= nuevoObjeto.toString();
+            byte[] data=str.getBytes("UTF-8");
+
+
+            URL url = new URL("http://"+IP_SERVER+":"+PORT_SERVER+"/"+path);
+            Log.d("EjemploPost","str---> "+url.toString());
+            // VER AQUI https://developer.android.com/reference/java/net/HttpURLConnection.html
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setFixedLengthStreamingMode(data.length);
+            urlConnection.setRequestProperty("Content-Type","application/json");
+            DataOutputStream printout = new DataOutputStream(urlConnection.getOutputStream());
+
+            printout.write(data);
+            printout.flush ();
+            printout.close ();
+            Log.d("TEST-ARR","FIN!!! "+urlConnection.getResponseMessage());
+
+        } catch (IOException e1) {
+            Log.e("TEST-ARR",e1.getMessage(),e1);
+            e1.printStackTrace();
+        }finally {
+            urlConnection.disconnect();
+        }
+
+    }
+
 }

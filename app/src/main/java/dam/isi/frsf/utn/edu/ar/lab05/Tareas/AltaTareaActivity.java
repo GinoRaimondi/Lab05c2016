@@ -471,12 +471,27 @@ public class AltaTareaActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Object... params) {
 
-            Integer valor = 100;
+            Integer valor = 0;
+            Integer idMax = 100;
+            Integer idApiRest=0;
+            Usuario u = new Usuario();
 
             ProyectoApiRest rest = new ProyectoApiRest();
 
             try {
-                valor = rest.getMaxIdUser();
+                idMax = rest.getMaxIdUser();
+                idApiRest = rest.existeUsuario(nombre_usuario);
+                if(idApiRest>0){
+                    valor=idApiRest;
+                }else {
+                    valor=idMax;
+
+                    u.setNombre(nombre_usuario);
+                    u.setId(valor);
+                    u.setCorreoElectronico(nombre_usuario+"@gmail.com");
+                    rest.crearUsuario(u);
+                }
+
             } catch (Exception e) {
 
             }
@@ -489,6 +504,7 @@ public class AltaTareaActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
 
             id_nombre_usuario = result;
+            Log.d("ID USUARIO",""+id_nombre_usuario);
 
             Prioridad p = new Prioridad();
             String prioridad = "Baja";
@@ -518,7 +534,6 @@ public class AltaTareaActivity extends AppCompatActivity {
             Tarea t = new Tarea(idTarea, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
                     new Proyecto(1, "TP integrador"), p,
                     new Usuario(/*id_nombre_usuario*/1, nombre_usuario, "sdadad"));
-
             myDao.nuevaTarea(t);
 
         }

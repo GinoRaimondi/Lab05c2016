@@ -45,9 +45,9 @@ public class VerDesviosActivity extends AppCompatActivity {
                 Boolean terminada = tareaTerminada.isChecked();
                 Log.d("TERMINADA",""+terminada.toString());
                 tareas = myDao.listarDesviosPlanificacion(terminada,Integer.parseInt(minutos));
-                texto = "Descripcion | Finalizada | Desvío";
+                texto = "Descripcion, Finalizada, Desvío";
                 for(Tarea t: tareas){
-                    texto+="\n\t"+t.getDescripcion()+"\t\t\t|\t"+t.getTerminada()+"\t\t|\t"+(t.getHorasEstimadas()-t.getMinutosTrabajados());
+                    texto+="\n"+t.getDescripcion()+", "+t.getTerminada()+", "+(t.getHorasEstimadas()-t.getMinutosTrabajados());
                 }
                 resultado.setText(texto);
             }
