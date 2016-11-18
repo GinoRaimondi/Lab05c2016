@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import dam.isi.frsf.utn.edu.ar.lab05.Tareas.VerDesviosActivity;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
@@ -108,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_gestion_proyectos) {
             Intent intent = new Intent(this, ProyectosActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_ver_desvios) {
+            Intent intent = new Intent(this, VerDesviosActivity.class);
             startActivity(intent);
             return true;
         }

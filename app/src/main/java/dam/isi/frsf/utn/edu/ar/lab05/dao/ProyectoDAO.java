@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
@@ -164,7 +165,51 @@ public class ProyectoDAO {
         // retorna una lista de todas las tareas que tardaron más (en exceso) o menos (por defecto)
         // que el tiempo planificado.
         // si la bandera soloTerminadas es true, se busca en las tareas terminadas, sino en todas.
-        return null;
+
+        String s="";
+        if(soloTerminadas){
+            s=" AND (TAREA."+ProyectoDBMetadata.TablaTareasMetadata.FINALIZADA+"= 1)";
+        }
+
+        String consulta ="SELECT "+
+                ProyectoDBMetadata.TablaTareasMetadata._ID+" as _id, "+
+                ProyectoDBMetadata.TablaTareasMetadata.TAREA+","+
+                ProyectoDBMetadata.TablaTareasMetadata.FINALIZADA+","+
+                ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS+"*60,"+
+                ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS+","+
+                "HORAS_PLANIFICADAS*60 - MINUTOS_TRABAJDOS"+
+                " FROM "+ProyectoDBMetadata.TABLA_TAREAS+
+                " WHERE (TAREA."+ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS+"*60"+
+                " - "+ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS+
+                ") BETWEEN -"+desvioMaximoMinutos+" AND "+desvioMaximoMinutos
+                +s;
+
+        Log.d("Consulta de Desvios: ",consulta);
+
+        Cursor cursor = db.rawQuery(consulta,null);
+
+        List<Tarea> tareas = new LinkedList<Tarea>();
+        Tarea t;
+        Boolean b= false;
+        if (cursor.moveToFirst()) {
+            Log.d("Tabla TAREA", cursor.getColumnName(1)+"|"+cursor.getColumnName(2)+"|"+cursor.getColumnName(3)+"|"+cursor.getColumnName(4)+"|"+cursor.getColumnName(5));
+            do{
+                /*Log.d("COLUMNA/DATO", cursor.getColumnName(1)+": "+cursor.getString(1));
+                Log.d("COLUMNA/DATO", cursor.getColumnName(2)+": "+cursor.getInt(2));
+                Log.d("COLUMNA/DATO", cursor.getColumnName(3)+": "+cursor.getInt(3));
+                Log.d("COLUMNA/DATO", cursor.getColumnName(4)+": "+cursor.getInt(4));*/
+
+                Log.d("DATOS","        "+cursor.getString(1)+"       "+cursor.getInt(2)+"                  "+cursor.getInt(3)+"             "+cursor.getInt(4)+"             "+cursor.getInt(5));
+                if(cursor.getInt(2)==1){
+                    b=true;
+                }else b=false;
+                t = new Tarea(0,cursor.getString(1),b,cursor.getInt(3),cursor.getInt(4),false,null,null,null);
+                tareas.add(t);
+
+            }while (cursor.moveToNext());
+        }
+
+        return tareas;
     }
 
     public Integer obtenerMaximoIdValorProyecto(){

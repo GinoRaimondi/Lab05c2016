@@ -12,4 +12,9 @@
         android:orderInCategory="100"
         android:title="Gestionar Proyectos"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ver_desvios"
+        android:orderInCategory="100"
+        android:title="Ver Desvíos"
+        app:showAsAction="never" />
 </menu>

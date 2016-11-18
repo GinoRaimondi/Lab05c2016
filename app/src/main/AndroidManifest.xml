@@ -24,10 +24,8 @@
         <activity
             android:name=".Proyectos.ProyectosActivity"
             android:label="@string/title_activity_proyectos"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Tareas.VerDesviosActivity"></activity>
     </application>
 
 </manifest>
