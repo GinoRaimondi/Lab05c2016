@@ -479,17 +479,35 @@ public class AltaTareaActivity extends AppCompatActivity {
             ProyectoApiRest rest = new ProyectoApiRest();
 
             try {
+
                 idMax = rest.getMaxIdUser();
+
                 idApiRest = rest.existeUsuario(nombre_usuario);
+
                 if(idApiRest>0){
+
+                    // Si ya esta en la api rest no lo creamos en ningun lado
+                    // Para hacer esto debemos estar sincronizados con la base sqlLite
+
                     valor=idApiRest;
+
+                    // Ponemos por defecto para generar la terea en sqlLite un usuario.
+                    // Habria que buscar en sqlLite el user que tenga el nombre requerido.
+                    // Deben sincronizarse las bases.
+                    id_nombre_usuario = 1;
+
                 }else {
+
                     valor=idMax;
 
                     u.setNombre(nombre_usuario);
                     u.setId(valor);
                     u.setCorreoElectronico(nombre_usuario+"@gmail.com");
                     rest.crearUsuario(u);
+
+                    id_nombre_usuario = valor;
+                    // Generamos el nuevo usuario en sqlLite
+                    myDao.nuevoUsuario(u);
                 }
 
             } catch (Exception e) {
@@ -503,7 +521,7 @@ public class AltaTareaActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer result) {
 
-            id_nombre_usuario = result;
+            //id_nombre_usuario = result;
             Log.d("ID USUARIO",""+id_nombre_usuario);
 
             Prioridad p = new Prioridad();
@@ -533,7 +551,7 @@ public class AltaTareaActivity extends AppCompatActivity {
 
             Tarea t = new Tarea(idTarea, descripcion.getText().toString(), false, Integer.parseInt(horasEstimadas.getText().toString()), 0, false,
                     new Proyecto(1, "TP integrador"), p,
-                    new Usuario(/*id_nombre_usuario*/1, nombre_usuario, "sdadad"));
+                    new Usuario(id_nombre_usuario, nombre_usuario, "sdadad"));
             myDao.nuevaTarea(t);
 
         }

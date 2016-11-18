@@ -94,6 +94,17 @@ public class ProyectoDAO {
 
     }
 
+
+    public void nuevoUsuario(Usuario u){
+
+        String sql = "INSERT INTO USUARIOS (NOMBRE,CORREO_ELECTRONICO) VALUES ('"+u.getNombre()+"','"+u.getNombre()+"')";
+        //db.rawQuery()
+        db.execSQL(sql);
+
+        Log.d("llegamos 1","sabe 1");
+
+    }
+
     public void actualizarTarea(Tarea t){
 
         //TODO
