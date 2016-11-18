@@ -70,6 +70,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_contactos" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -84,5 +90,6 @@
         android:layout_height="wrap_content"
         android:text="Cancelar"
         android:id="@+id/btnCancelar" />
-</LinearLayout>
+
+    </LinearLayout>
     </LinearLayout>
